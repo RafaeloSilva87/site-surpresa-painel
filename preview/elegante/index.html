@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Te Amo - Uma Declaração Especial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <svg class="sprite" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+        <symbol id="icon-heart" viewBox="0 0 24 24">
+            <path d="M12 21S3.5 15.6 3.5 9.8C3.5 6.6 5.8 4.4 8.6 4.4c1.8 0 3.3 1 4.4 2.5 1.1-1.5 2.6-2.5 4.4-2.5 2.8 0 5.1 2.2 5.1 5.4 0 5.8-8.5 11.2-10.5 11.2z" fill="currentColor"/>
+        </symbol>
+        <symbol id="icon-camera" viewBox="0 0 24 24">
+            <path d="M9 4l-1.5 2H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-3.5L15 4H9z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        </symbol>
+    </svg>
+
+    <!-- Tela de abertura: o toque pra entrar também libera a música -->
+    <button id="capa-toque" class="capa-toque">
+        <svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg>
+        <span class="capa-toque-titulo" id="capa-titulo-texto"></span>
+        <span class="capa-toque-dica" id="capa-dica-texto"></span>
+    </button>
+
+    <!-- Coraçõezinhos flutuando pela tela -->
+    <div class="ambiente" aria-hidden="true">
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+        <svg class="icon"><use href="#icon-heart"/></svg>
+    </div>
+
+    <!-- Varal de atalhos: fitas adesivas na borda -->
+    <nav class="fitas" aria-label="Ir para uma página do álbum">
+        <a class="fita" href="#inicio" style="--cor: var(--algodao)">capa</a>
+        <a class="fita" href="#mensagens" style="--cor: var(--manteiga)">bilhetes</a>
+        <a class="fita" href="#galeria" style="--cor: var(--menta)">fotos</a>
+        <a class="fita" href="#razoes" style="--cor: var(--algodao)">motivos</a>
+        <a class="fita" href="#surpresa" style="--cor: var(--manteiga)">raspe aqui</a>
+    </nav>
+
+    <main class="album">
+        <!-- Capa -->
+        <section id="inicio" class="pagina capa">
+            <div class="hero">
+                <p class="hero-eyebrow" id="hero-eyebrow"></p>
+                <div class="hero-content">
+                    <h1 class="hero-title" id="hero-titulo"></h1>
+                    <p class="hero-subtitle" id="hero-subtitulo"></p>
+                </div>
+                <div class="hero-text">
+                    <p id="hero-texto"></p>
+                </div>
+                <div class="floating-elements">
+                    <span class="float-item"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></span>
+                    <span class="float-item"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></span>
+                    <span class="float-item"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></span>
+                </div>
+                <p class="rolar-dica">role pra ver o álbum ↓</p>
+            </div>
+        </section>
+
+        <!-- Bilhetes -->
+        <section id="mensagens" class="pagina">
+            <div class="titulo-pagina">
+                <h2>Bilhetes que deixei pra você</h2>
+            </div>
+            <div class="mural-bilhetes" id="mural-bilhetes"></div>
+        </section>
+
+        <!-- Mural de fotos -->
+        <section id="galeria" class="pagina">
+            <div class="titulo-pagina">
+                <h2>Nosso mural</h2>
+                <p>Cada foto é um lembrete do quanto nos amamos</p>
+            </div>
+            <div class="mural-fotos" id="mural-fotos"></div>
+        </section>
+
+        <!-- Varal de motivos -->
+        <section id="razoes" class="pagina">
+            <div class="titulo-pagina">
+                <h2>Um varal de motivos</h2>
+            </div>
+            <div class="varal">
+                <div class="varal-corda" aria-hidden="true"></div>
+                <div id="varal-coracoes"></div>
+            </div>
+        </section>
+
+        <!-- Raspadinhas -->
+        <section id="surpresa" class="pagina">
+            <div class="titulo-pagina">
+                <h2>Raspe os corações</h2>
+                <p>Arraste o dedo ou o mouse sobre cada um para revelar a surpresa</p>
+            </div>
+            <div class="raspadinhas" id="raspadinhas"></div>
+        </section>
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" onclick="fecharLightbox()">&times;</button>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="">
+        <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+
+    <!-- Música de fundo -->
+    <audio id="bg-music" loop></audio>
+    <button id="music-toggle" class="music-toggle" aria-label="Pausar ou tocar música"><svg class="icon" aria-hidden="true"><use href="#icon-heart"/></svg></button>
+
+    <script src="dados.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

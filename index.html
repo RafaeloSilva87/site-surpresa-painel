@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monte o seu site 💌</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="configurador.css">
+</head>
+<body>
+    <header class="topo">
+        <h1>Monte o seu site 💌</h1>
+        <p>Preencha os campos do lado esquerdo e veja seu site montando ao vivo. Quando terminar, clique em <strong>“Gerar meu site”</strong> e mande o arquivo pra gente publicar.</p>
+    </header>
+
+    <div class="abas" role="tablist">
+        <button class="aba ativa" data-aba="editar">✏️ Editar</button>
+        <button class="aba" data-aba="previa">👀 Ver prévia</button>
+    </div>
+
+    <main class="painel">
+        <!-- Coluna de edição -->
+        <section class="form" id="form" data-painel="editar">
+
+            <div class="seletor-tema">
+                <span class="seletor-titulo">🎨 Escolha o estilo do seu site</span>
+                <div class="temas" id="temas">
+                    <button type="button" class="tema-opcao" data-tema="kawaii"
+                        style="--t-fundo:#fdeef0; --t-destaque:#ff5c8a; --t-texto:#4a2e44;">
+                        <span class="tema-amostra"></span>Kawaii
+                    </button>
+                    <button type="button" class="tema-opcao" data-tema="noite"
+                        style="--t-fundo:#0b1624; --t-destaque:#f0c040; --t-texto:#e8dfc8;">
+                        <span class="tema-amostra"></span>Noite
+                    </button>
+                    <button type="button" class="tema-opcao" data-tema="vintage"
+                        style="--t-fundo:#f5ead8; --t-destaque:#8b1a2f; --t-texto:#3d2314;">
+                        <span class="tema-amostra"></span>Vintage
+                    </button>
+                    <button type="button" class="tema-opcao" data-tema="elegante"
+                        style="--t-fundo:#f9f6f3; --t-destaque:#6b1a2a; --t-texto:#1a1018;">
+                        <span class="tema-amostra"></span>Elegante
+                    </button>
+                </div>
+            </div>
+
+            <details class="secao" open>
+                <summary>1. Abertura</summary>
+                <div class="secao-corpo">
+                    <label>Título da tela de abertura
+                        <input type="text" data-campo="capaTitulo" maxlength="40" placeholder="Para você">
+                    </label>
+                    <label>Textinho de dica (embaixo do título)
+                        <input type="text" data-campo="capaDica" maxlength="40" placeholder="toque para entrar">
+                    </label>
+                </div>
+            </details>
+
+            <details class="secao" open>
+                <summary>2. Página inicial</summary>
+                <div class="secao-corpo">
+                    <label>Frase de topo (pequena, acima do título)
+                        <input type="text" data-campo="heroEyebrow" maxlength="60" placeholder="Para Maria, com amor">
+                    </label>
+                    <label>Título grande <span class="ajuda">a última palavra fica em rosa</span>
+                        <input type="text" data-campo="heroTitulo" maxlength="40" placeholder="Te amo">
+                    </label>
+                    <label>Subtítulo
+                        <input type="text" data-campo="heroSubtitulo" maxlength="80" placeholder="Uma declaração especial para você">
+                    </label>
+                    <label>Texto de abertura <span class="ajuda">o primeiro parágrafo que ela vai ler</span>
+                        <textarea data-campo="heroTexto" rows="5" placeholder="Escreva por que criou esse site..."></textarea>
+                    </label>
+                </div>
+            </details>
+
+            <details class="secao">
+                <summary>3. Bilhetes <span class="conta" id="conta-bilhetes"></span></summary>
+                <div class="secao-corpo">
+                    <p class="dica-secao">Recadinhos curtos, tipo post-it. Escolha uma cor para cada um.</p>
+                    <div id="campos-bilhetes"></div>
+                </div>
+            </details>
+
+            <details class="secao">
+                <summary>4. Fotos <span class="conta" id="conta-fotos"></span></summary>
+                <div class="secao-corpo">
+                    <p class="dica-secao">Suba até 8 fotos do casal. As fotos ficam guardadas dentro do próprio site (não precisa mandar separado). Pode deixar slots em branco.</p>
+                    <div id="campos-fotos" class="grade-fotos"></div>
+                </div>
+            </details>
+
+            <details class="secao">
+                <summary>5. Motivos <span class="conta" id="conta-motivos"></span></summary>
+                <div class="secao-corpo">
+                    <p class="dica-secao">Um varal com motivos pelos quais você ama essa pessoa.</p>
+                    <div id="campos-motivos"></div>
+                    <button type="button" class="btn-add" id="add-motivo">+ Adicionar motivo</button>
+                </div>
+            </details>
+
+            <details class="secao">
+                <summary>6. Raspadinhas <span class="conta" id="conta-surpresas"></span></summary>
+                <div class="secao-corpo">
+                    <p class="dica-secao">6 surpresinhas que aparecem quando ela raspa os corações.</p>
+                    <div id="campos-surpresas"></div>
+                </div>
+            </details>
+
+            <details class="secao">
+                <summary>7. Música <span class="opcional">opcional</span></summary>
+                <div class="secao-corpo">
+                    <p class="dica-secao">Um MP3 que toca de fundo. Deixe em branco para não ter música.</p>
+                    <label class="arquivo-musica">
+                        <input type="file" id="input-musica" accept="audio/mpeg,audio/mp3,.mp3">
+                        <span id="nome-musica">Escolher arquivo .mp3</span>
+                    </label>
+                    <button type="button" class="btn-remover-musica" id="remover-musica" hidden>Remover música</button>
+                    <p class="aviso-tamanho" id="aviso-musica" hidden></p>
+                </div>
+            </details>
+
+        </section>
+
+        <!-- Coluna de prévia -->
+        <aside class="previa" data-painel="previa">
+            <div class="previa-cabecalho">
+                <span>Prévia ao vivo</span>
+                <button type="button" class="btn-recarregar" id="recarregar" title="Recarregar prévia">↻</button>
+            </div>
+            <div class="telefone">
+                <div class="telefone-tela">
+                    <iframe id="preview-frame" src="preview/kawaii/index.html" title="Prévia do site"></iframe>
+                </div>
+            </div>
+            <div class="acoes">
+                <button type="button" class="btn-gerar" id="btn-gerar">✨ Gerar meu site</button>
+                <div class="acoes-secundarias">
+                    <button type="button" class="btn-secundario" id="btn-rascunho">💾 Salvar rascunho</button>
+                    <button type="button" class="btn-secundario btn-limpar" id="btn-limpar">🗑️ Limpar tudo</button>
+                </div>
+                <p class="nota-rascunho" id="nota-rascunho"></p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Instruções finais (aparece ao gerar) -->
+    <div class="modal" id="modal-pronto" hidden>
+        <div class="modal-caixa">
+            <button class="modal-fechar" id="modal-fechar">&times;</button>
+            <h2>Seu site foi gerado! 🎉</h2>
+            <p>Baixamos um arquivo chamado <strong>dados.js</strong> pra você. Agora é só:</p>
+            <ol>
+                <li>Encontrar o arquivo <strong>dados.js</strong> na pasta de Downloads do seu celular/computador.</li>
+                <li>Mandar esse arquivo pra gente no <strong>WhatsApp</strong> (anexar como documento).</li>
+                <li>Pronto! A gente publica e te devolve o link do seu site. 💕</li>
+            </ol>
+            <a class="btn-whats" id="btn-whats" href="#" target="_blank" rel="noopener">📲 Mandar no WhatsApp</a>
+        </div>
+    </div>
+
+    <script src="configurador.js"></script>
+</body>
+</html>

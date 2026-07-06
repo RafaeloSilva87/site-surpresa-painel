@@ -1,0 +1,699 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --linho: #fdeef0;
+    --algodao: #ffd3e2;
+    --manteiga: #fff1c2;
+    --menta: #cdeede;
+    --framboesa: #ff5c8a;
+    --ameixa: #4a2e44;
+    --creme: #fffaf6;
+    --font-display: 'Itim', cursive;
+    --font-body: 'Quicksand', sans-serif;
+    /* raspadinhas (lidas pelo script.js) */
+    --rasp-c1: #ffd3e2;
+    --rasp-c2: #fff1c2;
+    --rasp-c3: #cdeede;
+    --rasp-fill: #4a2e44;
+    --rasp-font: 700 16px Quicksand;
+    --rasp-simbolo: '♥';
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--ameixa);
+    min-height: 100vh;
+    background-color: var(--linho);
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 92, 138, 0.05) 0px, rgba(255, 92, 138, 0.05) 2px, transparent 2px, transparent 14px),
+        repeating-linear-gradient(-45deg, rgba(255, 92, 138, 0.05) 0px, rgba(255, 92, 138, 0.05) 2px, transparent 2px, transparent 14px);
+    position: relative;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: inline-block;
+}
+
+/* Coraçõezinhos subindo pela tela inteira */
+.ambiente {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ambiente .icon {
+    position: absolute;
+    bottom: -10%;
+    color: rgba(255, 92, 138, 0.18);
+    animation: subir linear infinite;
+}
+
+.ambiente .icon:nth-child(1) { left: 6%; width: 22px; animation-duration: 14s; animation-delay: 0s; }
+.ambiente .icon:nth-child(2) { left: 18%; width: 14px; animation-duration: 10s; animation-delay: 2s; }
+.ambiente .icon:nth-child(3) { left: 32%; width: 18px; animation-duration: 16s; animation-delay: 5s; }
+.ambiente .icon:nth-child(4) { left: 48%; width: 12px; animation-duration: 11s; animation-delay: 1s; }
+.ambiente .icon:nth-child(5) { left: 64%; width: 20px; animation-duration: 15s; animation-delay: 4s; }
+.ambiente .icon:nth-child(6) { left: 78%; width: 15px; animation-duration: 12s; animation-delay: 3s; }
+.ambiente .icon:nth-child(7) { left: 90%; width: 18px; animation-duration: 13s; animation-delay: 6s; }
+
+@keyframes subir {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-115vh) rotate(25deg); opacity: 0; }
+}
+
+/* Varal de fitas: atalhos colados na borda da tela, não uma navbar de app */
+.fitas {
+    position: fixed;
+    top: 18px;
+    right: -6px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.fita {
+    background: var(--cor, var(--algodao));
+    color: var(--ameixa);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.78em;
+    text-decoration: none;
+    text-transform: lowercase;
+    padding: 8px 18px 8px 14px;
+    border-radius: 4px 0 0 4px;
+    box-shadow: 0 4px 10px rgba(74, 46, 68, 0.18);
+    transform: translateX(0) rotate(-1deg);
+    transition: transform 0.25s ease, padding-right 0.25s ease;
+}
+
+.fita:nth-child(even) { transform: rotate(1deg); }
+
+.fita:hover {
+    transform: translateX(-8px) rotate(0deg);
+    padding-right: 26px;
+}
+
+/* Album: rolagem única, sem abas */
+.album {
+    position: relative;
+    z-index: 2;
+    padding: 0 20px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.pagina {
+    padding: 70px 0 20px;
+}
+
+/* Capa / Hero */
+.capa {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero {
+    text-align: center;
+    max-width: 640px;
+}
+
+.hero-eyebrow {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--framboesa);
+    margin-bottom: 4px;
+}
+
+.hero-content {
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: 6em;
+    font-weight: 400;
+    color: var(--ameixa);
+    line-height: 1;
+}
+
+.hero-title em {
+    font-style: normal;
+    color: var(--framboesa);
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.2em;
+    color: var(--ameixa);
+    font-weight: 600;
+    margin-top: 10px;
+    opacity: 0.85;
+}
+
+.hero-text {
+    margin: 22px 0;
+}
+
+.hero-text p {
+    font-size: 1.12em;
+    line-height: 1.75;
+    color: var(--ameixa);
+    font-weight: 500;
+}
+
+.floating-elements {
+    display: flex;
+    gap: 34px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.float-item { color: var(--framboesa); }
+
+.float-item .icon {
+    width: 32px;
+    height: 32px;
+    animation: bounce 2.2s ease-in-out infinite;
+}
+
+.float-item:nth-child(2) .icon { animation-delay: 0.25s; opacity: 0.6; }
+.float-item:nth-child(3) .icon { animation-delay: 0.5s; }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-16px) rotate(8deg); }
+}
+
+.rolar-dica {
+    margin-top: 46px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--ameixa);
+    opacity: 0.55;
+    animation: balanco 2s ease-in-out infinite;
+}
+
+@keyframes balanco {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+}
+
+/* Título de página */
+.titulo-pagina {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.titulo-pagina h2 {
+    font-family: var(--font-display);
+    font-size: 2.6em;
+    font-weight: 400;
+    color: var(--ameixa);
+    margin-bottom: 6px;
+}
+
+.titulo-pagina p {
+    font-size: 1.05em;
+    color: var(--ameixa);
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+/* Mural de bilhetes (sticky notes) */
+.mural-bilhetes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px 22px;
+    padding: 10px 0;
+}
+
+.bilhete {
+    background: var(--cor, var(--creme));
+    width: 250px;
+    min-height: 190px;
+    padding: 24px 20px;
+    border-radius: 3px 3px 14px 14px;
+    box-shadow: 0 10px 22px rgba(74, 46, 68, 0.16);
+    position: relative;
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bilhete::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 50px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(74, 46, 68, 0.08);
+}
+
+.bilhete:hover {
+    transform: rotate(0deg) translateY(-6px) scale(1.03);
+    box-shadow: 0 16px 30px rgba(255, 92, 138, 0.3);
+    z-index: 5;
+}
+
+.bilhete p {
+    font-family: var(--font-display);
+    font-size: 1.18em;
+    line-height: 1.5;
+    color: var(--ameixa);
+    margin-bottom: 14px;
+}
+
+.bilhete-rabisco {
+    display: block;
+    font-size: 0.82em;
+    font-weight: 700;
+    color: var(--framboesa);
+}
+
+/* Mural de fotos (colagem, não grid uniforme) */
+.mural-fotos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 215px;
+    gap: 22px;
+    padding: 10px 0 20px;
+}
+
+.foto { grid-column: span 1; grid-row: span 1; }
+.foto--grande { grid-column: span 2; grid-row: span 2; }
+.foto--larga { grid-column: span 2; grid-row: span 1; }
+.foto--alta { grid-column: span 1; grid-row: span 2; }
+
+.foto {
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+}
+
+.foto:nth-child(odd) .foto-moldura { transform: rotate(-2deg); }
+.foto:nth-child(even) .foto-moldura { transform: rotate(1.6deg); }
+.foto:nth-child(3n) .foto-moldura { transform: rotate(-1deg); }
+
+.foto:hover .foto-moldura {
+    transform: rotate(0deg) scale(1.04);
+    z-index: 5;
+}
+
+.foto-moldura {
+    position: relative;
+    background: var(--creme);
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 12px 24px rgba(74, 46, 68, 0.2);
+    transition: transform 0.3s ease;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.foto-recorte {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    display: flex;
+}
+
+.foto-moldura::before {
+    content: '♥';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--framboesa);
+    color: var(--creme);
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(74, 46, 68, 0.3);
+}
+
+.foto-recorte img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+}
+
+/* Placeholder de foto: quando o cliente ainda não enviou a imagem */
+.foto-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    padding: 10px;
+    border: 2px dashed rgba(74, 46, 68, 0.28);
+    border-radius: 6px;
+    background: repeating-linear-gradient(135deg, rgba(74, 46, 68, 0.04) 0px, rgba(74, 46, 68, 0.04) 8px, transparent 8px, transparent 16px);
+    color: rgba(74, 46, 68, 0.55);
+}
+
+.foto-placeholder .icon {
+    width: 26px;
+    height: 26px;
+}
+
+.foto-placeholder span {
+    font-size: 0.78em;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.foto p {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    color: var(--ameixa);
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(74, 46, 68, 0.92);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+    cursor: zoom-out;
+}
+
+.lightbox.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    cursor: default;
+}
+
+.lightbox-caption {
+    font-family: var(--font-display);
+    color: var(--creme);
+    font-size: 1.4em;
+    margin-top: 18px;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    border: none;
+    color: var(--creme);
+    font-size: 2.2em;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.lightbox-close:hover {
+    transform: scale(1.2) rotate(10deg);
+}
+
+/* Varal de motivos */
+.varal {
+    position: relative;
+    padding: 30px 0 10px;
+    text-align: center;
+}
+
+.varal-corda {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top: 2px dashed rgba(74, 46, 68, 0.3);
+}
+
+.varal-coracao {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 190px;
+    margin: 0 8px 26px;
+    padding: 22px 16px 16px;
+    background: var(--cor, var(--creme));
+    border-radius: 4px 4px 50% 50% / 4px 4px 30% 30%;
+    box-shadow: 0 10px 20px rgba(74, 46, 68, 0.16);
+    vertical-align: top;
+    transition: transform 0.25s ease;
+}
+
+.varal-coracao:nth-child(odd) { transform: translateY(6px) rotate(-1.5deg); }
+.varal-coracao:nth-child(even) { transform: translateY(0) rotate(1.5deg); }
+
+.varal-coracao:hover {
+    transform: translateY(-6px) rotate(0deg) scale(1.04);
+    z-index: 5;
+}
+
+.varal-coracao .icon {
+    width: 26px;
+    height: 26px;
+    color: var(--framboesa);
+    margin-bottom: 8px;
+}
+
+.varal-coracao h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.2em;
+    color: var(--ameixa);
+    margin-bottom: 4px;
+}
+
+.varal-coracao p {
+    font-size: 0.85em;
+    color: var(--ameixa);
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+/* Raspadinhas */
+.raspadinhas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 26px;
+    padding: 10px 0 30px;
+}
+
+.raspadinha {
+    width: 170px;
+    height: 170px;
+    position: relative;
+    border-radius: 50%;
+    box-shadow: 0 12px 24px rgba(74, 46, 68, 0.2);
+    overflow: hidden;
+    background: var(--creme);
+}
+
+.raspadinha-texto {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 1.05em;
+    color: var(--ameixa);
+}
+
+.raspadinha canvas {
+    position: absolute;
+    inset: 0;
+    cursor: grab;
+    touch-action: none;
+}
+
+.raspadinha-dica {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.72em;
+    font-weight: 700;
+    color: rgba(74, 46, 68, 0.55);
+    pointer-events: none;
+}
+
+/* Music Toggle */
+.music-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(140deg, var(--framboesa), var(--algodao));
+    color: var(--creme);
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(255, 92, 138, 0.4);
+    z-index: 1500;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-toggle .icon { width: 22px; height: 22px; }
+.music-toggle:hover { transform: scale(1.1); }
+.music-toggle.playing .icon { animation: bounce 1.4s ease-in-out infinite; }
+.music-toggle.paused { opacity: 0.55; }
+.music-toggle.sem-musica { display: none; }
+
+/* Tela de abertura: capa que cobre a tela até o primeiro toque */
+.capa-toque {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+    border: none;
+    background: linear-gradient(160deg, var(--algodao), var(--manteiga) 60%, var(--menta));
+    color: var(--ameixa);
+    cursor: pointer;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.capa-toque .icon {
+    width: 56px;
+    height: 56px;
+    color: var(--framboesa);
+    animation: bounce 1.8s ease-in-out infinite;
+}
+
+.capa-toque-titulo {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+}
+
+.capa-toque-dica {
+    font-size: 0.95em;
+    font-weight: 700;
+    opacity: 0.75;
+}
+
+.capa-toque.escondida {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Foco visível */
+button:focus-visible, a:focus-visible {
+    outline: 3px solid var(--framboesa);
+    outline-offset: 3px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .hero-title { font-size: 3.6em; }
+    .titulo-pagina h2 { font-size: 2em; }
+    .mural-fotos { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 175px; }
+    .fitas { top: auto; bottom: 18px; right: 0; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; max-width: 96%; }
+    .fita { border-radius: 4px; transform: rotate(0deg) !important; padding: 7px 12px; }
+    .music-toggle { left: 14px; right: auto; bottom: 18px; }
+}
+
+@media (max-width: 480px) {
+    .hero-title { font-size: 2.5em; }
+    .hero-subtitle { font-size: 1em; }
+    .hero-text p { font-size: 1em; }
+    .titulo-pagina h2 { font-size: 1.6em; }
+    .mural-fotos { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+    .foto--grande, .foto--larga, .foto--alta { grid-column: span 2; grid-row: span 1; }
+    .bilhete { width: 100%; max-width: 320px; }
+    .varal-coracao { width: 140px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    /* Mantém os coraçõezinhos visíveis (parados, sem subir) em vez de invisíveis */
+    .ambiente .icon {
+        animation: none !important;
+        opacity: 0.3 !important;
+        bottom: 40% !important;
+    }
+}
