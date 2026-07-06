@@ -41,12 +41,34 @@ function estadoPadrao() {
         surpresas: ['', '', '', '', '', ''],
         musica: '',
         _tema: 'kawaii', // estilo escolhido (kawaii | noite | vintage | elegante)
+        _plano: null, // padrao | completo | premium — vem do link da página de vendas (?plano=)
     };
 }
 
 const TEMAS_VALIDOS = ['kawaii', 'noite', 'vintage', 'elegante'];
 
+// Limites de cada plano — precisam bater com os itens em Pagina de Vendas/config.js
+const PLANOS = {
+    padrao:   { nome: 'Padrão',   maxFotos: 8,    musica: false },
+    completo: { nome: 'Completo', maxFotos: 12,   musica: true  },
+    premium:  { nome: 'Premium',  maxFotos: null, musica: true  }, // null = ilimitado
+};
+
+function planoAtivo() {
+    return PLANOS[estado._plano] || null;
+}
+
+// Se o link veio da página de vendas com ?plano=..., aplica (e prevalece sobre um rascunho antigo)
+function aplicarPlanoDaURL() {
+    const params = new URLSearchParams(location.search);
+    const planoParam = params.get('plano');
+    if (planoParam && PLANOS[planoParam]) {
+        estado._plano = planoParam;
+    }
+}
+
 let estado = carregarRascunho() || estadoPadrao();
+aplicarPlanoDaURL();
 
 // ------------------------------------------------------------
 // Preview (iframe) — manda os dados a cada alteração (com debounce)
@@ -140,10 +162,15 @@ function montarBilhetes() {
 function montarFotos() {
     const cont = document.getElementById('campos-fotos');
     cont.innerHTML = '';
+    const plano = planoAtivo();
+    const maxFotos = plano ? plano.maxFotos : null; // null = sem limite conhecido (link sem ?plano=, uso interno/teste)
+    const podeGerenciarSlots = !!plano; // só permite adicionar/excluir slot quando o plano é conhecido
+
     estado.fotos.forEach((f, i) => {
         const slot = document.createElement('div');
         slot.className = 'slot-foto';
         slot.innerHTML = `
+            ${podeGerenciarSlots && estado.fotos.length > 1 ? `<button type="button" class="btn-excluir-slot" title="Remover este slot">✕</button>` : ''}
             <label class="foto-preview">
                 ${f.arquivo ? `<img src="${f.arquivo}" alt="">` : `<span>📷 Foto ${i + 1}<br>toque para escolher</span>`}
                 <input type="file" accept="image/*">
@@ -154,6 +181,7 @@ function montarFotos() {
         const input = slot.querySelector('input[type="file"]');
         const legenda = slot.querySelector('input[type="text"]');
         const remover = slot.querySelector('.btn-remover');
+        const excluirSlot = slot.querySelector('.btn-excluir-slot');
 
         input.addEventListener('change', async () => {
             const file = input.files[0];
@@ -176,9 +204,36 @@ function montarFotos() {
                 aoMudar();
             });
         }
+        if (excluirSlot) {
+            excluirSlot.addEventListener('click', () => {
+                estado.fotos.splice(i, 1);
+                montarFotos();
+                aoMudar();
+            });
+        }
         cont.appendChild(slot);
     });
+
+    // Botão de adicionar slot — só aparece se o plano permitir mais fotos
+    const btnAdd = document.getElementById('add-foto');
+    btnAdd.hidden = !(podeGerenciarSlots && (maxFotos === null || estado.fotos.length < maxFotos));
+
+    // Texto de ajuda reflete o limite do plano
+    const dica = document.getElementById('dica-fotos');
+    if (plano) {
+        dica.textContent = maxFotos
+            ? `Seu plano permite até ${maxFotos} fotos. As fotos ficam guardadas dentro do próprio site.`
+            : 'Seu plano permite fotos ilimitadas. As fotos ficam guardadas dentro do próprio site.';
+    } else {
+        dica.textContent = 'Suba até 8 fotos do casal. As fotos ficam guardadas dentro do próprio site (não precisa mandar separado). Pode deixar slots em branco.';
+    }
 }
+
+document.getElementById('add-foto').addEventListener('click', () => {
+    estado.fotos.push({ arquivo: '', legenda: '', tamanho: 'normal' });
+    montarFotos();
+    aoMudar();
+});
 
 function comprimirImagem(file, maxLado = 1200, qualidade = 0.82) {
     return new Promise((resolve, reject) => {
@@ -301,6 +356,18 @@ removerMusica.addEventListener('click', () => {
     aoMudar();
 });
 
+// Bloqueia a seção inteira se o plano não incluir música (ex: Padrão)
+function atualizarGatingMusica() {
+    const plano = planoAtivo();
+    const bloqueada = !!plano && !plano.musica;
+    document.getElementById('musica-bloqueada').hidden = !bloqueada;
+    document.getElementById('musica-conteudo').style.display = bloqueada ? 'none' : '';
+    document.getElementById('musica-badge').textContent = bloqueada ? 'bloqueado' : 'opcional';
+    if (bloqueada && estado.musica) {
+        estado.musica = ''; // segurança: rascunho antigo de outro plano não deve carregar música
+    }
+}
+
 // ------------------------------------------------------------
 // Contadores nos títulos das seções
 // ------------------------------------------------------------
@@ -308,8 +375,14 @@ function atualizarContadores() {
     const preenchidos = (arr, fn) => arr.filter(fn).length;
     document.getElementById('conta-bilhetes').textContent =
         `${preenchidos(estado.bilhetes, b => b.texto.trim())}/${estado.bilhetes.length}`;
-    document.getElementById('conta-fotos').textContent =
-        `${preenchidos(estado.fotos, f => f.arquivo)}/${estado.fotos.length}`;
+
+    const plano = planoAtivo();
+    const maxFotos = plano ? plano.maxFotos : null;
+    const fotosPreenchidas = preenchidos(estado.fotos, f => f.arquivo);
+    document.getElementById('conta-fotos').textContent = maxFotos
+        ? `${fotosPreenchidas}/${maxFotos}`
+        : plano ? `${fotosPreenchidas} (ilimitado)` : `${fotosPreenchidas}/${estado.fotos.length}`;
+
     document.getElementById('conta-motivos').textContent =
         `${preenchidos(estado.motivos, m => m.texto.trim())}/${estado.motivos.length}`;
     document.getElementById('conta-surpresas').textContent =
@@ -363,9 +436,25 @@ document.getElementById('btn-limpar').addEventListener('click', () => {
     if (!confirm('Isso apaga tudo que você preencheu e volta ao começo. Tem certeza?')) return;
     localStorage.removeItem(CHAVE_RASCUNHO);
     estado = estadoPadrao();
+    aplicarPlanoDaURL();
     recarregarFormularioInteiro();
+    atualizarBannerPlano();
+    atualizarGatingMusica();
     aoMudar();
 });
+
+// ------------------------------------------------------------
+// Banner do plano ativo
+// ------------------------------------------------------------
+function atualizarBannerPlano() {
+    const banner = document.getElementById('plano-info');
+    const plano = planoAtivo();
+    if (!plano) { banner.hidden = true; return; }
+    const fotosTxt = plano.maxFotos ? `até ${plano.maxFotos} fotos` : 'fotos ilimitadas';
+    const musicaTxt = plano.musica ? 'com música de fundo' : 'sem música de fundo';
+    banner.hidden = false;
+    banner.innerHTML = `💳 Plano <strong>${plano.nome}</strong> — ${fotosTxt}, ${musicaTxt}`;
+}
 
 // ------------------------------------------------------------
 // Gerar o arquivo dados.js
@@ -478,6 +567,8 @@ montarFotos();
 montarMotivos();
 montarSurpresas();
 atualizarContadores();
+atualizarBannerPlano();
+atualizarGatingMusica();
 if (estado.musica) { nomeMusica.textContent = 'música carregada'; removerMusica.hidden = false; }
 
 // Aplica o tema salvo (destaca o botão e, se não for o kawaii padrão, recarrega a prévia)

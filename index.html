@@ -46,6 +46,8 @@
                 </div>
             </div>
 
+            <div class="plano-info" id="plano-info" hidden></div>
+
             <details class="secao" open>
                 <summary>1. Abertura</summary>
                 <div class="secao-corpo">
@@ -87,8 +89,9 @@
             <details class="secao">
                 <summary>4. Fotos <span class="conta" id="conta-fotos"></span></summary>
                 <div class="secao-corpo">
-                    <p class="dica-secao">Suba até 8 fotos do casal. As fotos ficam guardadas dentro do próprio site (não precisa mandar separado). Pode deixar slots em branco.</p>
+                    <p class="dica-secao" id="dica-fotos">Suba até 8 fotos do casal. As fotos ficam guardadas dentro do próprio site (não precisa mandar separado). Pode deixar slots em branco.</p>
                     <div id="campos-fotos" class="grade-fotos"></div>
+                    <button type="button" class="btn-add" id="add-foto" hidden>+ Adicionar foto</button>
                 </div>
             </details>
 
@@ -110,15 +113,20 @@
             </details>
 
             <details class="secao">
-                <summary>7. Música <span class="opcional">opcional</span></summary>
+                <summary>7. Música <span class="opcional" id="musica-badge">opcional</span></summary>
                 <div class="secao-corpo">
-                    <p class="dica-secao">Um MP3 que toca de fundo. Deixe em branco para não ter música.</p>
-                    <label class="arquivo-musica">
-                        <input type="file" id="input-musica" accept="audio/mpeg,audio/mp3,.mp3">
-                        <span id="nome-musica">Escolher arquivo .mp3</span>
-                    </label>
-                    <button type="button" class="btn-remover-musica" id="remover-musica" hidden>Remover música</button>
-                    <p class="aviso-tamanho" id="aviso-musica" hidden></p>
+                    <div class="aviso-bloqueio" id="musica-bloqueada" hidden>
+                        🔒 Música de fundo é exclusiva dos planos <strong>Completo</strong> e <strong>Premium</strong>.
+                    </div>
+                    <div id="musica-conteudo">
+                        <p class="dica-secao">Um MP3 que toca de fundo. Deixe em branco para não ter música.</p>
+                        <label class="arquivo-musica">
+                            <input type="file" id="input-musica" accept="audio/mpeg,audio/mp3,.mp3">
+                            <span id="nome-musica">Escolher arquivo .mp3</span>
+                        </label>
+                        <button type="button" class="btn-remover-musica" id="remover-musica" hidden>Remover música</button>
+                        <p class="aviso-tamanho" id="aviso-musica" hidden></p>
+                    </div>
                 </div>
             </details>
 
