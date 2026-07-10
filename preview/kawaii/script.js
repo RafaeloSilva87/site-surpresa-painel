@@ -35,6 +35,10 @@ function renderSite(DADOS) {
     document.getElementById('hero-subtitulo').textContent = DADOS.heroSubtitulo || '';
     document.getElementById('hero-texto').textContent = DADOS.heroTexto || '';
 
+    // O título da aba acompanha o conteúdo — cada casal tem o seu
+    const tituloAba = [DADOS.heroTitulo, DADOS.heroEyebrow].filter(Boolean).join(' — ');
+    if (tituloAba) document.title = tituloAba;
+
     // Título do hero: a última palavra fica destacada em rosa
     (function montarTituloHero() {
         const palavras = (DADOS.heroTitulo || '').trim().split(' ').filter(Boolean);
@@ -102,7 +106,7 @@ function renderSite(DADOS) {
     })();
 
     // ---- Raspadinhas ----
-    criarRaspadinhas(DADOS.surpresas || []);
+    criarRaspadinhas(DADOS.surpresas || [], DADOS._semEmbaralhar);
 
     // ---- Música de fundo ----
     const bgMusic = document.getElementById('bg-music');
@@ -135,10 +139,10 @@ function raspConfig() {
     };
 }
 
-function criarRaspadinhas(surpresas) {
+function criarRaspadinhas(surpresas, semEmbaralhar) {
     const container = document.getElementById('raspadinhas');
     container.innerHTML = '';
-    const embaralhadas = [...surpresas].sort(() => Math.random() - 0.5);
+    const embaralhadas = semEmbaralhar ? [...surpresas] : [...surpresas].sort(() => Math.random() - 0.5);
     const rasp = raspConfig();
 
     embaralhadas.forEach((texto, i) => {

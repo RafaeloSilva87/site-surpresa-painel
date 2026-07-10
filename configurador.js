@@ -30,7 +30,7 @@ function estadoPadrao() {
             { arquivo: '', legenda: '', tamanho: 'normal' },
             { arquivo: '', legenda: '', tamanho: 'larga' },
             { arquivo: '', legenda: '', tamanho: 'normal' },
-            { arquivo: '', legenda: '', tamanho: 'normal' },
+            { arquivo: '', legenda: '', tamanho: 'larga' }, // a última fica larga: sobra no fim do mural parece proposital
         ],
         motivos: [
             { titulo: 'Motivo 1', texto: '' },
@@ -159,6 +159,14 @@ function montarBilhetes() {
 // ------------------------------------------------------------
 // Fotos (upload + compressão + base64)
 // ------------------------------------------------------------
+// Tamanhos que o mural aceita (mesmos ids do script.js dos temas)
+const TAMANHOS_FOTO = [
+    { id: 'normal', rotulo: 'quadrada' },
+    { id: 'grande', rotulo: 'destaque (2×2)' },
+    { id: 'larga',  rotulo: 'horizontal (2×1)' },
+    { id: 'alta',   rotulo: 'vertical (1×2)' },
+];
+
 function montarFotos() {
     const cont = document.getElementById('campos-fotos');
     cont.innerHTML = '';
@@ -176,10 +184,14 @@ function montarFotos() {
                 <input type="file" accept="image/*">
             </label>
             <input type="text" placeholder="Legenda (opcional)" value="${escaparAttr(f.legenda)}">
+            <select class="sel-tamanho" title="Tamanho da foto no mural">
+                ${TAMANHOS_FOTO.map(t => `<option value="${t.id}"${f.tamanho === t.id ? ' selected' : ''}>${t.rotulo}</option>`).join('')}
+            </select>
             ${f.arquivo ? `<button type="button" class="btn-remover">remover foto</button>` : ''}
         `;
         const input = slot.querySelector('input[type="file"]');
         const legenda = slot.querySelector('input[type="text"]');
+        const tamanho = slot.querySelector('.sel-tamanho');
         const remover = slot.querySelector('.btn-remover');
         const excluirSlot = slot.querySelector('.btn-excluir-slot');
 
@@ -197,6 +209,7 @@ function montarFotos() {
             aoMudar();
         });
         legenda.addEventListener('input', () => { f.legenda = legenda.value; aoMudar(); });
+        tamanho.addEventListener('change', () => { f.tamanho = tamanho.value; aoMudar(); });
         if (remover) {
             remover.addEventListener('click', () => {
                 f.arquivo = '';
@@ -440,6 +453,7 @@ document.getElementById('btn-limpar').addEventListener('click', () => {
     recarregarFormularioInteiro();
     atualizarBannerPlano();
     atualizarGatingMusica();
+    trocarTema(estado._tema); // volta a prévia e o botão destacado pro tema padrão
     aoMudar();
 });
 
@@ -511,9 +525,10 @@ document.getElementById('recarregar').addEventListener('click', () => {
 // ------------------------------------------------------------
 // Seletor de tema
 // ------------------------------------------------------------
+let temaNaPrevia = 'kawaii'; // tema carregado no iframe agora (bate com o src inicial no HTML)
+
 function trocarTema(tema, forcarReload) {
     if (!TEMAS_VALIDOS.includes(tema)) tema = 'kawaii';
-    const alvo = `preview/${tema}/index.html`;
     const mudou = estado._tema !== tema;
     estado._tema = tema;
 
@@ -522,10 +537,13 @@ function trocarTema(tema, forcarReload) {
         b.classList.toggle('sel', b.dataset.tema === tema);
     });
 
-    // recarrega a prévia no novo tema (o resto do conteúdo é reenviado no load)
-    if (mudou || forcarReload) {
+    // recarrega a prévia se o iframe ainda não está neste tema
+    // (compara com o iframe, não com o estado — senão um rascunho salvo
+    // em outro tema abre destacando o tema certo mas mostrando o kawaii)
+    if (temaNaPrevia !== tema || forcarReload) {
+        temaNaPrevia = tema;
         framePronto = false;
-        frame.src = alvo;
+        frame.src = `preview/${tema}/index.html`;
     }
     if (mudou) { salvarRascunho(true); }
 }
